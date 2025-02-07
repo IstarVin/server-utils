@@ -111,6 +111,7 @@ class ChapterSync {
 
     while ((await getDownloadStatus()) === "STARTED") {
       await komgaLibraryScan();
+      console.log("Library Scanned", new Date().toLocaleString());
       await sleep(timeToSleep);
     }
 
