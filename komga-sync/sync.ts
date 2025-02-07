@@ -38,4 +38,5 @@ async function syncTachideskKomga() {
   }
 }
 
+chapterSync.daemon();
 await syncTachideskKomga();
