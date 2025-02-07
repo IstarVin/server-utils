@@ -29,6 +29,8 @@ async function syncTachideskKomga() {
 
           await syncToKomga(mangaDetails);
 
+          chapterSync.daemon();
+
           console.log("Synced", mangaDetails.title);
         }
       }
@@ -36,5 +38,4 @@ async function syncTachideskKomga() {
   }
 }
 
-chapterSync();
 await syncTachideskKomga();

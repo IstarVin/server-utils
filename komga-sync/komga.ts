@@ -99,18 +99,23 @@ export async function syncToKomga(manga: MangaSchema) {
   }
 }
 
-export async function chapterSync() {
-  let timeToSleep = 60000; // 1 Minute
+class ChapterSync {
+  running: boolean = false;
 
-  while (true) {
-    if ((await getDownloadStatus()) === "STARTED") {
-      timeToSleep = 60000;
+  async daemon() {
+    if (this.running) return;
+
+    const timeToSleep = 60000; // 1 Minute
+
+    this.running = true;
+
+    while ((await getDownloadStatus()) === "STARTED") {
       await komgaLibraryScan();
-      console.log("Library Scan");
-    } else {
-      timeToSleep = 120000;
+      await sleep(timeToSleep);
     }
 
-    await sleep(timeToSleep);
+    this.running = false;
   }
 }
+
+export const chapterSync = new ChapterSync();
