@@ -1,0 +1,14 @@
+{
+  "tasks": {
+    "dev": "deno run --watch -ENRW sync.ts",
+    "build": "deno compile -ENRW -o dist/sync sync.ts"
+  },
+  "imports": {
+    "@117/sleep": "jsr:@117/sleep@^1.0.0",
+    "@mr/retry": "jsr:@mr/retry@^0.0.3",
+    "@std/assert": "jsr:@std/assert@1",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.3",
+    "@std/path": "jsr:@std/path@^1.0.8",
+    "zod": "npm:zod@^3.24.1"
+  }
+}
