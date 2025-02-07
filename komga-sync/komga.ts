@@ -26,7 +26,7 @@ export const komgaLibraryScan = retry(
     });
     await sleep(10000);
   },
-  { attempts: 20 },
+  { attempts: 20 }
 );
 
 const searchForManga = retry(
@@ -45,7 +45,7 @@ const searchForManga = retry(
         z.object({
           id: z.string(),
           name: z.string(),
-        }),
+        })
       ),
     });
 
@@ -63,7 +63,7 @@ const searchForManga = retry(
     }
     return pickedManga;
   },
-  { attempts: 20 },
+  { attempts: 20 }
 );
 
 export async function syncToKomga(manga: MangaSchema) {
@@ -89,7 +89,7 @@ export async function syncToKomga(manga: MangaSchema) {
       method: "PATCH",
       headers,
       body,
-    },
+    }
   );
 
   if (res.status === 204) {
@@ -99,23 +99,18 @@ export async function syncToKomga(manga: MangaSchema) {
   }
 }
 
-class ChapterSync {
-  running: boolean = false;
+export async function chapterSync() {
+  let timeToSleep = 60000; // 1 Minute
 
-  async daemon() {
-    if (this.running) return;
-
-    const timeToSleep = 60000; // 1 Minute
-
-    this.running = true;
-
-    while ((await getDownloadStatus()) === "STARTED") {
+  while (true) {
+    if ((await getDownloadStatus()) === "STARTED") {
+      timeToSleep = 60000;
       await komgaLibraryScan();
-      await sleep(timeToSleep);
+      console.log("Library Scan");
+    } else {
+      timeToSleep = 120000;
     }
 
-    this.running = false;
+    await sleep(timeToSleep);
   }
 }
-
-export const chapterSync = new ChapterSync();

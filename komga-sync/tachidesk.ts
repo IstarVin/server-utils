@@ -27,7 +27,7 @@ export async function updateCovers(thumbnailUrl: string, mangaPath: string) {
 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch ${thumbnailUrlAbs}: ${response.statusText}`,
+      `Failed to fetch ${thumbnailUrlAbs}: ${response.statusText}`
     );
   }
 
@@ -86,7 +86,7 @@ export const getTachidesk = retry(
 
     return mangaData.data.mangas.nodes.at(0);
   },
-  { attempts: 20 },
+  { attempts: 20 }
 );
 
 export const getMangaChapterInfo = retry(
@@ -135,33 +135,36 @@ export const getMangaChapterInfo = retry(
 
     return [pickedManga.downloadCount, pickedManga.chapters.totalCount];
   },
-  { attempts: 20 },
+  { attempts: 20 }
 );
 
-export const getDownloadStatus = retry(async () => {
-  type DownloadStatusGraphQL = {
-    data: {
-      downloadStatus: {
-        state: "STOPPED" | "STARTED";
+export const getDownloadStatus = retry(
+  async () => {
+    type DownloadStatusGraphQL = {
+      data: {
+        downloadStatus: {
+          state: "STOPPED" | "STARTED";
+        };
       };
     };
-  };
-  const query = `
+    const query = `
     query AllCategories {
       downloadStatus {
         state
       }
     }
   `;
-  const res = await fetch(envs.tachideskUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ query }),
-  });
+    const res = await fetch(envs.tachideskUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query }),
+    });
 
-  const downloadStatus = (await res.json()) as DownloadStatusGraphQL;
+    const downloadStatus = (await res.json()) as DownloadStatusGraphQL;
 
-  return downloadStatus.data.downloadStatus.state;
-});
+    return downloadStatus.data.downloadStatus.state;
+  },
+  { attempts: 20 }
+);

@@ -24,12 +24,10 @@ async function syncTachideskKomga() {
 
           await updateCovers(
             new URL(envs.tachideskUrl).origin + mangaDetails.thumbnailUrl,
-            path,
+            path
           );
 
           await syncToKomga(mangaDetails);
-
-          chapterSync.daemon();
 
           console.log("Synced", mangaDetails.title);
         }
@@ -38,4 +36,5 @@ async function syncTachideskKomga() {
   }
 }
 
+chapterSync();
 await syncTachideskKomga();
