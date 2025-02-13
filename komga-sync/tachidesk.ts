@@ -84,7 +84,9 @@ export const getTachidesk = retry(
 
     const mangaData = (await res.json()) as MangaSchemaGraphQL;
 
-    return mangaData.data.mangas.nodes.at(0);
+    const pickedManga = mangaData.data.mangas.nodes.at(0);
+
+    return pickedManga;
   },
   { attempts: 20 }
 );

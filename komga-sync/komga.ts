@@ -31,6 +31,10 @@ export const komgaLibraryScan = retry(
 
 const searchForManga = retry(
   async (title: string) => {
+    title = title.replace(/[\?\_:!]/g, "");
+
+    console.log(title);
+
     await komgaLibraryScan();
     const searchResponse = await fetch(`${envs.komgaUrl}/api/v1/series/list`, {
       method: "POST",
@@ -68,6 +72,7 @@ const searchForManga = retry(
 
 export async function syncToKomga(manga: MangaSchema) {
   const mangaDetails = await searchForManga(manga.title);
+  console.log("found", manga.title);
 
   const statusMap: Map<StatusType, string> = new Map();
   statusMap.set("COMPLETED", "ENDED");
@@ -96,6 +101,7 @@ export async function syncToKomga(manga: MangaSchema) {
     console.log("Added", manga.title, "details to komga");
   } else {
     console.log(res.statusText, manga.title);
+    console.log(body);
   }
 }
 

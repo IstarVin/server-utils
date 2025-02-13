@@ -1,6 +1,7 @@
 {
   "tasks": {
     "dev": "deno run --watch -ENRW sync.ts",
+    "start": "deno run -ENRW sync.ts",
     "build": "deno compile -ENRW -o dist/sync sync.ts"
   },
   "imports": {
